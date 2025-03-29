@@ -20,4 +20,9 @@ describe('LandingPage', () => {
     const contactInfoElement = screen.getByText(/Contact me at/i);
     expect(contactInfoElement).toBeInTheDocument();
   });
+
+  it('renders the landing page', () => {
+    render(<LandingPage />);
+    expect(screen.getByText(/Welcome to the CI\/CD Pipeline Overview/i)).toBeInTheDocument();
+  });
 });
