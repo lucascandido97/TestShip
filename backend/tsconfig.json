@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src", // Base directory for resolving non-relative module names
+    "paths": {
+      "@config/*": ["config/*"], // Alias for the config folder
+      "@models/*": ["models/*"], // Alias for the models folder
+      "@routes/*": ["routes/*"], // Alias for the routes folder
+      "@controllers/*": ["controllers/*"], // Alias for the controllers folder
+      "@services/*": ["services/*"], // Alias for the services folder
+      "@scripts/*": ["scripts/*"], // Alias for the scripts folder
+      "@tests/*": ["tests/*"], // Alias for the tests folder
+      "@mocks/*": ["tests/mocks/*"] // Alias for mocks inside the tests folder
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+  "ts-node": {
+    // Do not forget to `npm i -D tsconfig-paths`
+    "require": ["tsconfig-paths/register"]
+  }
+}

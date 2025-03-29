@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Target ECMAScript 6
+    "module": "commonjs", // Use CommonJS module system
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Enable interoperability between CommonJS and ES Modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in file names
+    "baseUrl": ".", // Base directory for resolving non-relative module names
+    "paths": {
+      "@pageObjects/*": ["pageObjects/*"] // Alias for the pageObjects folder
+    }
+  },
+  "include": [
+    "./**/*.ts" // Include all TypeScript files in the e2e folder
+  ],
+  "exclude": [
+    "node_modules" // Exclude node_modules folder
+  ]
+}
