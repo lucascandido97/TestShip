@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Validate branch name
         run: |
-            if [[ "feature/TS-0001" =~ ^(feature|bugfix|hotfix)/TS-[0-9]+$ ]]; then
+            if [[ ${{ github.ref_name }} =~ ^(feature|bugfix|hotfix)/TS-[0-9]+$ ]]; then
             echo "Branch name is valid."
             else
             echo "Invalid branch name. Allowed format: (feature|bugfix|hotfix)/TS-{numbers}."
