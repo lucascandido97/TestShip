@@ -86,6 +86,11 @@ jobs:
       name: CVE Scan in Docker
       runs-on: ubuntu-latest
       needs: build-backend-image
+      if: ${{ github.event_name == 'pull_request' }}
+
+      permissions:
+        contents: read
+        security-events: write
 
       steps: 
         - name: Login to Docker hub
@@ -94,18 +99,32 @@ jobs:
             username: ${{ secrets.DOCKER_USERNAME }}
             password: ${{ secrets.DOCKER_PASSWORD }}
 
-        - name: Run Trivy for CVEs
+        - name: Run Trivy for CVEs (all vulnerabilities - no blocking)
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: ${{ secrets.DOCKER_USERNAME }}/backend:${{ needs.build-backend-image.outputs.docker-image }}
-            format: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'sarif' || 'table' }}
-            exit-code: ${{ github.event_name == 'push' && github.ref_name == 'main' && 1 || 0 }}
-            ignore-unfixed: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'true' || 'false' }}
-            severity: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'CRITICAL,HIGH' || 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL' }}
-            output: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'trivy-scan.sarif' || '' }}
+            format: 'table'
+            exit-code: 0
+        
+        - name: Run Trivy for CVEs (CRITICAL, HIGH - blocking)
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: ${{ secrets.DOCKER_USERNAME }}/backend:${{ needs.build-backend-image.outputs.docker-image }}
+            format: 'sarif'
+            exit-code: 1
+            ignore-unfixed: 'true'
+            severity: 'CRITICAL,HIGH'
+            output: 'trivy-scan.sarif'
+        
+            # image-ref: ${{ secrets.DOCKER_USERNAME }}/backend:${{ needs.build-backend-image.outputs.docker-image }}
+            # format: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'sarif' || 'table' }}
+            # exit-code: ${{ github.event_name == 'push' && github.ref_name == 'main' && 1 || 0 }}
+            # ignore-unfixed: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'true' || 'false' }}
+            # severity: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'CRITICAL,HIGH' || 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL' }}
+            # output: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'trivy-scan.sarif' || '' }}
         
         - name: Upload SARIF to GitHub Code Scanning
-          if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          if: always()
           uses: github/codeql-action/upload-sarif@v2
           with:
             sarif_file: trivy-scan.sarif
@@ -114,6 +133,7 @@ jobs:
       name: Unit Testing in Docker
       runs-on: ubuntu-latest
       needs: build-backend-image    
+      if: ${{ github.event_name == 'pull_request' }}
 
       steps:
         - name: Checkout code
@@ -129,6 +149,7 @@ jobs:
       name: Integration Testing in Docker
       runs-on: ubuntu-latest
       needs: build-backend-image
+      if: ${{ github.event_name == 'pull_request' }}
 
       steps:
         - name: Checkout code
@@ -142,6 +163,7 @@ jobs:
       name: E2E Testing in Docker
       runs-on: ubuntu-latest
       needs: build-backend-image
+      if: ${{ github.event_name == 'pull_request' }}
 
       steps:
         - name: Checkout code
