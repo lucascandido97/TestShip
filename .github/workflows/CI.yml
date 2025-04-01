@@ -33,7 +33,7 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                 images: ${{ secrets.DOCKER_USERNAME }}/backend
-                tags: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'production' || 'buildstage' }}${{ '_' + github.head_ref + '_' + github.sha }}
+                tags: ${{ github.event_name == 'push' && github.ref_name == 'main' && 'production' || 'buildstage' }}_${{ github.head_ref }}_${{ github.sha }}
                 labels: |
                   org.example.team=QA Engineer
                   org.example.project=TestShip
