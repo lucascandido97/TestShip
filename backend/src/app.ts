@@ -8,7 +8,7 @@ import contactRoutes from '@routes/contactRoutes';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || '8080';
 
 // Middleware
 app.use(cors());
@@ -42,7 +42,7 @@ sequelize.authenticate()
         const syncOptions = process.env.NODE_ENV === 'production' ? { alter: true } : { force: true };
         await sequelize.sync(syncOptions);
         console.log('Database tables have been synchronized.');
-
+        
         // Start the server
         app.listen(PORT, () => {
             console.log(`Server is running on http://localhost:${PORT}`);

@@ -16,7 +16,9 @@ services:
   backend:
     build:
       context: ./backend
-      target: build
+      target: development
+    ports:
+      - "8080:8080"  
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -24,22 +26,23 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       NODE_ENV: development
+      DEBUG: "*"
     depends_on:
       db:
         condition: service_healthy
-    command: ["npm", "run", "start"]
+    command: ["npm", "run", "start:dev"]
 
   frontend:
     build:
       context: ./frontend
-      target: build
+      target: development
     ports:
-      - "3001:3000"
+      - "3000:3000"
     environment:
-      REACT_APP_API_URL: http://backend:3000
+      REACT_APP_API_URL: http://localhost:8080
     depends_on:
       - backend
-    command: ["npm", "run", "start"]
+    command: ["npm", "run", "start:dev"]
 
   e2e:
     build:
