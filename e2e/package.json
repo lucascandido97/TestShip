@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "End-to-end tests for the web application using Playwright.",
   "scripts": {
+    "pretest": "tsc",
     "test": "playwright test"
   },
   "devDependencies": {
