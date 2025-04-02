@@ -1,29 +1,44 @@
-# Stage 1: Development
-FROM node:16 AS development
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --no-audit
+# Stage: Base
+FROM node:16-alpine AS base
 
-# Stage 2: Build
-FROM node:16 AS build
 WORKDIR /app
-COPY --from=development /app/node_modules ./node_modules
+
+COPY package.json ./
+
+# Stage: Development
+FROM base AS development
+
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    npm ci --no-audit
+
 COPY . .
+
+# Stage: Build
+FROM base AS build
+
+RUN --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    npm ci --no-audit
+
+COPY . .
+    
 RUN npm run build
 
-# Stage 3: Production
+# Final stage: Production
 FROM node:16-alpine AS production
+
 WORKDIR /app
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    npm install --omit=dev --no-audit
+
 COPY --from=build /app/dist ./dist
-COPY --from=development /app/node_modules ./node_modules
-COPY package*.json ./
 
-RUN npm prune --omit=dev && \
-    rm -f package*.json
+RUN chown -R appuser:appgroup /app
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup && \
-    chown -R appuser:appgroup /app
 USER appuser
 
 ENV NODE_ENV=production

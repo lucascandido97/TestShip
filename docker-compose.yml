@@ -42,6 +42,13 @@ services:
       REACT_APP_API_URL: http://localhost:8080
     depends_on:
       - backend
+    develop:
+      watch:
+      - action: sync
+        path: ./frontend
+        target: /app
+      - action: rebuild
+        path: ./frontend/package.json
     command: ["npm", "run", "start:dev"]
 
   e2e:
@@ -50,6 +57,13 @@ services:
     depends_on:
       - frontend
       - backend
+    develop:
+      watch:
+      - action: sync
+        path: ./e2e
+        target: /app
+      - action: rebuild
+        path: ./frontend/package.json
     command: ["sh", "-c", "npm run test || tail -f /dev/null"]
 
 # volumes:
