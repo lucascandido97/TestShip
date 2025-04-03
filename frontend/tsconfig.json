@@ -15,5 +15,7 @@
     "noEmit": true,
     "jsx": "react-jsx" // Certifique-se de que esta configuração está presente
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

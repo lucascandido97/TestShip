@@ -7,12 +7,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brown: {
-          700: '#8B4513', // Marrom para header e footer
-        },
-        blue: {
-          800: '#1E3A8A', // Azul escuro para o header e footer
-        },
+        primary: '#000000', // Black
+        secondary: '#2A2A2A', // Lighter gray
+      },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(to right, #2A2A2A, #000000)', // Updated gradient
       },
     },
   },

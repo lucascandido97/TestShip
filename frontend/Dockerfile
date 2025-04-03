@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY package.json ./
 
-# Stage : Development
+# Stage: Development
 FROM base AS development
 
 RUN --mount=type=cache,target=/root/.npm \
@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.npm \
 
 COPY . .
 
-# Stage : Build
+# Stage: Build
 FROM base AS build
 
 RUN --mount=type=bind,source=package-lock.json,target=package-lock.json \
